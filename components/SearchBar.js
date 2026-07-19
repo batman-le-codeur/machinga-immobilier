@@ -186,7 +186,7 @@ export default function SearchBar() {
                     <div className="min-w-0 flex-1 text-left">
                       <p className="text-sm font-medium text-ink truncate">{l.titre}</p>
                       <p className="text-xs text-gray-500 truncate">
-                        {l.category} — {l.localisation}
+                        {l.category} - {l.localisation}
                       </p>
                     </div>
                     <p className="text-sm font-medium text-primary shrink-0">

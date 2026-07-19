@@ -8,3 +8,7 @@ npm-debug.log*
 # Fichiers sources des visuels (deja copies dans public/, pas necessaires
 # au build ni au deploiement)
 /image
+
+# Contient le mot de passe admin en clair, a remettre en main propre au
+# client plutot que de le versionner dans le depot Git.
+Guide-Utilisation-MACHINGA-IMMOBILIER.pdf

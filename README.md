@@ -1,12 +1,12 @@
-# MACHINGA IMMOBILIER — site web
+# MACHINGA IMMOBILIER - site web
 
 Site immobilier pour S.C.I MACHINGA IMMOBILIER (Libreville, Gabon).
 
 ## Stack
 
 - **Next.js 14** (App Router) + **Tailwind CSS**
-- **Supabase** (PostgreSQL + Storage) — base de données réelle et stockage des photos
-- **Web3Forms** — notification email quand un visiteur envoie le formulaire de contact
+- **Supabase** (PostgreSQL + Storage) - base de données réelle et stockage des photos
+- **Web3Forms** - notification email quand un visiteur envoie le formulaire de contact
 - Authentification admin simple (mot de passe unique, cookie de session signé)
 - Déploiement en conteneur Docker, prêt pour **Coolify**
 
@@ -61,7 +61,7 @@ Tout se passe sur `/admin` après connexion :
 
 - **Annonces** : bouton "+ Nouvelle annonce" pour créer, "Modifier" / "Supprimer"
   sur chaque annonce existante. Les photos s'ajoutent directement en glissant un
-  ou plusieurs fichiers (JPEG, PNG ou WebP, 8 Mo max chacun) — elles sont
+  ou plusieurs fichiers (JPEG, PNG ou WebP, 8 Mo max chacun) - elles sont
   envoyées automatiquement vers Supabase Storage, aucune manipulation de
   serveur nécessaire.
 - **Messages** : tous les messages du formulaire de contact arrivent dans
@@ -69,7 +69,7 @@ Tout se passe sur `/admin` après connexion :
   bord. Tu peux les marquer comme lus ou les supprimer.
 
 Les textes des pages "Nous découvrir", horaires, informations légales, etc.
-sont dans le code (`app/nous-decouvrir/page.js`, `components/Footer.js`) — dis-moi
+sont dans le code (`app/nous-decouvrir/page.js`, `components/Footer.js`) - dis-moi
 si tu préfères pouvoir les éditer aussi depuis l'admin, ce serait une évolution
 simple à ajouter.
 
@@ -82,12 +82,12 @@ légère basée sur `node:20-alpine`, sortie Next.js "standalone").
 2. Dans Coolify : **New Resource > Application**, choisis ton dépôt, méthode de
    build **Dockerfile** (celui à la racine du projet est détecté automatiquement).
 3. Renseigne les variables d'environnement (les mêmes que `.env.example`) dans
-   l'onglet **Environment Variables** de Coolify — surtout `SUPABASE_URL`,
+   l'onglet **Environment Variables** de Coolify - surtout `SUPABASE_URL`,
    `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `WEB3FORMS_KEY`.
 4. Port de l'application : `3000`.
 5. Active le déploiement automatique sur push si tu veux du déploiement continu.
 6. Lance le déploiement. Aucun volume disque n'est nécessaire : les annonces
-   sont dans Supabase, les photos dans Supabase Storage — le conteneur peut
+   sont dans Supabase, les photos dans Supabase Storage - le conteneur peut
    être redéployé ou recréé sans perte de données.
 
 ## 6. Maintenance
@@ -103,7 +103,7 @@ légère basée sur `node:20-alpine`, sortie Next.js "standalone").
 - **Espace de stockage photos** : géré par Supabase Storage (offert jusqu'à 1 Go
   sur le plan gratuit, extensible ensuite).
 - **Sécurité** : la clé `SUPABASE_SERVICE_ROLE_KEY` ne doit jamais apparaître
-  dans du code exécuté côté navigateur — elle n'est utilisée que dans
+  dans du code exécuté côté navigateur - elle n'est utilisée que dans
   `lib/supabaseAdmin.js`, importé uniquement par des routes API serveur.
 
 ---

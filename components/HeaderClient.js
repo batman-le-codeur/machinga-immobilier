@@ -229,7 +229,7 @@ export default function HeaderClient({ authed }) {
           )}
         </nav>
 
-        {/* Burger — mobile only */}
+        {/* Burger - mobile only */}
         <button
           type="button"
           onClick={openMenu}
@@ -244,7 +244,7 @@ export default function HeaderClient({ authed }) {
       </div>
     </header>
 
-      {/* Mobile drawer — rendered as a sibling of <header>, not a descendant: the
+      {/* Mobile drawer - rendered as a sibling of <header>, not a descendant: the
           header's backdrop-blur creates a new containing block for fixed-position
           descendants, which would otherwise squash this drawer to the header's own
           height instead of the full viewport. */}
@@ -312,7 +312,7 @@ export default function HeaderClient({ authed }) {
               )}
             </ul>
             <div className="px-6 py-5 border-t border-gray-200 text-sm text-gray-500">
-              Après l&apos;Union, Libreville — Gabon
+              Après l&apos;Union, Libreville - Gabon
             </div>
           </nav>
         </div>

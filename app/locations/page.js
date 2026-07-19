@@ -5,7 +5,7 @@ import PageHeader from '../../components/PageHeader';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Locations à Libreville — MACHINGA IMMOBILIER',
+  title: 'Locations à Libreville - MACHINGA IMMOBILIER',
   description:
     'Chambres, studios, appartements, maisons meublées et locaux commerciaux disponibles à la location à Libreville, Gabon.'
 };

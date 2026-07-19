@@ -18,11 +18,11 @@ function formatPrice(prix, type) {
 
 export async function generateMetadata({ params }) {
   const listing = await getListingById(params.id);
-  if (!listing) return { title: 'Annonce introuvable — MACHINGA IMMOBILIER' };
+  if (!listing) return { title: 'Annonce introuvable - MACHINGA IMMOBILIER' };
 
-  const title = `${listing.titre} — ${formatPrice(listing.prix, listing.type)} | MACHINGA IMMOBILIER`;
+  const title = `${listing.titre} - ${formatPrice(listing.prix, listing.type)} | MACHINGA IMMOBILIER`;
   const description = `${listing.category} à ${listing.localisation}${
-    listing.surface ? ` — ${listing.surface} m²` : ''
+    listing.surface ? ` - ${listing.surface} m²` : ''
   }${listing.description ? `. ${listing.description}` : ''}`.slice(0, 300);
   const images = listing.photos && listing.photos.length > 0 ? [{ url: listing.photos[0] }] : undefined;
 

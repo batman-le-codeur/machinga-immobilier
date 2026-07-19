@@ -65,8 +65,8 @@ export default function MessagesManager({ messages, setMessages }) {
             <div>
               <span className="font-medium text-ink">{m.nom}</span>{' '}
               <span className="text-sm text-gray-500">
-                — {m.email}
-                {m.telephone ? ` — ${m.telephone}` : ''}
+                - {m.email}
+                {m.telephone ? ` - ${m.telephone}` : ''}
               </span>
             </div>
             <span className="text-xs text-gray-400">
@@ -88,7 +88,7 @@ export default function MessagesManager({ messages, setMessages }) {
               {m.ville && (
                 <span className="text-xs px-2 py-1 bg-offwhite border border-gray-200 text-gray-600">
                   {m.ville}
-                  {m.quartier ? ` — ${m.quartier}` : ''}
+                  {m.quartier ? ` - ${m.quartier}` : ''}
                 </span>
               )}
             </div>

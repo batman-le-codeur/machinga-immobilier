@@ -5,7 +5,7 @@ import PageHeader from '../../components/PageHeader';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Ventes à Libreville — MACHINGA IMMOBILIER',
+  title: 'Ventes à Libreville - MACHINGA IMMOBILIER',
   description:
     'Terrains, appartements, maisons, locaux commerciaux et biens divers disponibles à la vente à Libreville, Gabon.'
 };

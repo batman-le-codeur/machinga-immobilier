@@ -101,7 +101,7 @@ export default function ListingsManager({ listings, setListings }) {
               <div className="flex-1 min-w-[200px]">
                 <p className="font-medium text-ink">{l.titre}</p>
                 <p className="text-sm text-gray-500">
-                  {l.type === 'location' ? 'Location' : 'Vente'} — {l.category} — {l.localisation}
+                  {l.type === 'location' ? 'Location' : 'Vente'} - {l.category} - {l.localisation}
                 </p>
               </div>
               <div className="text-sm text-primary font-medium">{formatPrice(l.prix, l.type)}</div>

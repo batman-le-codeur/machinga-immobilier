@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getListings } from '../lib/publicData';
 import ListingCard from '../components/ListingCard';
 import FAQ from '../components/FAQ';
@@ -6,6 +7,7 @@ import Testimonials from '../components/Testimonials';
 import Reveal from '../components/Reveal';
 import SearchBar from '../components/SearchBar';
 import ParallaxBg from '../components/ParallaxBg';
+import SocialLinks from '../components/SocialLinks';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +46,7 @@ export default async function HomePage() {
             className="text-white/80 max-w-xl leading-relaxed mb-8 animate-fade-in-up"
             style={{ animationDelay: '200ms' }}
           >
-            MACHINGA est un rêve qui prend racine pour devenir réalité — bâtir là où l&apos;on
+            MACHINGA est un rêve qui prend racine pour devenir réalité - bâtir là où l&apos;on
             n&apos;osait plus espérer, et faire naître des foyers là où il n&apos;y avait que des
             espaces vides.
           </p>
@@ -112,6 +114,42 @@ export default async function HomePage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Affiche promotionnelle */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <Reveal className="mx-auto max-w-md lg:mx-0">
+            <div className="border border-gray-200 overflow-hidden transition-all hover:shadow-xl">
+              <Image
+                src="/affiche.jpg"
+                alt="Machinga Immobilier - 30% sur les frais de commission, visite gratuite"
+                width={1100}
+                height={1375}
+                sizes="(min-width: 1024px) 448px, (min-width: 768px) 448px, 90vw"
+                className="w-full h-auto"
+              />
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <p className="uppercase tracking-widest text-sm text-secondary mb-3">Offre du moment</p>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 leading-snug">
+              30% sur les frais de commission - visite gratuite
+            </h2>
+            <p className="text-gray-600 leading-relaxed mb-8">
+              Contactez-nous directement par le canal de votre choix, notre équipe vous répond
+              rapidement.
+            </p>
+            <SocialLinks variant="light" />
+            <Link
+              href="/contact"
+              className="inline-block mt-8 bg-primary text-white px-6 py-3 text-sm font-medium transition-all hover:bg-primary-light hover:-translate-y-0.5"
+            >
+              Nous contacter
+            </Link>
+          </Reveal>
+        </div>
       </section>
 
       {/* FAQ */}

@@ -108,6 +108,18 @@ export default function NousDecouvrirPage() {
       </Reveal>
 
       <Reveal as="section">
+        <h2 className="text-2xl font-semibold mb-6">Découvrez-nous en vidéo</h2>
+        <video
+          controls
+          preload="none"
+          poster="/decouvrir-video-poster.jpg"
+          className="w-full aspect-video border border-gray-200 bg-black"
+        >
+          <source src="/decouvrir-video.mp4" type="video/mp4" />
+        </video>
+      </Reveal>
+
+      <Reveal as="section">
         <h2 className="text-2xl font-semibold mb-6">Nos services</h2>
         <div className="space-y-4">
           {SERVICES.map((s, i) => (
@@ -190,7 +202,7 @@ export default function NousDecouvrirPage() {
             Pour l&apos;avenir, nous aspirons à construire une entreprise reconnue pour son
             excellence, son innovation et son impact positif sur la société.
           </p>
-          <p className="text-ink font-medium pt-2">— Fondateur de S.C.I MACHINGA IMMOBILIER</p>
+          <p className="text-ink font-medium pt-2">- Fondateur de S.C.I MACHINGA IMMOBILIER</p>
         </div>
       </Reveal>
 
@@ -200,15 +212,15 @@ export default function NousDecouvrirPage() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>RCCM : GA-LBV-01-2026-B42-00067</li>
             <li>NIF : 2026010533470</li>
-            <li>Adresse : Après l&apos;Union, Libreville — GABON</li>
+            <li>Adresse : Après l&apos;Union, Libreville - GABON</li>
             <li>BP : 8521</li>
           </ul>
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-4">Horaires</h2>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>Lun – Ven : 8h30 – 16h30</li>
-            <li>Sam : 9h – 12h</li>
+            <li>Lun - Ven : 8h30 - 16h30</li>
+            <li>Sam : 9h - 12h</li>
             <li>Dim : Fermé</li>
           </ul>
         </div>

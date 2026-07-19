@@ -16,7 +16,7 @@ export default function Footer() {
           />
           <p className="font-semibold text-lg mb-3">MACHINGA IMMOBILIER</p>
           <p className="text-sm text-white/70 leading-relaxed">
-            S.C.I MACHINGA IMMOBILIER — l&apos;immobilier digital, au service de vos projets à
+            S.C.I MACHINGA IMMOBILIER - l&apos;immobilier digital, au service de vos projets à
             Libreville.
           </p>
         </div>
@@ -35,8 +35,8 @@ export default function Footer() {
           <p className="font-medium mb-3 text-white/90">Horaires</p>
           <ul className="space-y-2 text-sm text-white/70">
             <li>Libreville, Gabon</li>
-            <li>Lun – Ven : 8h30 – 16h30</li>
-            <li>Sam : 9h – 12h — Dim : Fermé</li>
+            <li>Lun - Ven : 8h30 - 16h30</li>
+            <li>Sam : 9h - 12h - Dim : Fermé</li>
           </ul>
         </div>
 
@@ -48,7 +48,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-5 text-xs text-white/50 flex flex-col sm:flex-row gap-2 sm:justify-between">
-          <span>RCCM : GA-LBV-01-2026-B42-00067 — NIF : 2026010533470</span>
+          <span>RCCM : GA-LBV-01-2026-B42-00067 - NIF : 2026010533470</span>
           <span>© {new Date().getFullYear()} S.C.I MACHINGA IMMOBILIER. Tous droits réservés.</span>
         </div>
       </div>

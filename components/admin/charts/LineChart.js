@@ -89,7 +89,7 @@ export default function LineChart({ data }) {
             transform: 'translate(-50%, -100%)'
           }}
         >
-          {new Date(active.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })} —{' '}
+          {new Date(active.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })} -{' '}
           {active.count} visite{active.count > 1 ? 's' : ''}
         </div>
       )}

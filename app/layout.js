@@ -5,7 +5,7 @@ import PageViewTracker from '../components/PageViewTracker';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'MACHINGA IMMOBILIER — L\u2019immobilier digital à Libreville',
+  title: 'MACHINGA IMMOBILIER - L\u2019immobilier digital à Libreville',
   description:
     "S.C.I MACHINGA IMMOBILIER accompagne particuliers et professionnels dans la location, l'achat et la vente de biens immobiliers à Libreville, Gabon.",
   icons: {

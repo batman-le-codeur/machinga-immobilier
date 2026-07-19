@@ -17,7 +17,7 @@ export default function ContactPage() {
         <div>
           <h2 className="text-xl font-semibold mb-4">Coordonnées</h2>
           <ul className="text-gray-700 space-y-2">
-            <li>Après l&apos;Union, Libreville — GABON</li>
+            <li>Après l&apos;Union, Libreville - GABON</li>
             <li>BP 8521</li>
             <li>{process.env.CONTACT_TELEPHONE || '+241 00 00 00 00'}</li>
             <li>{process.env.CONTACT_EMAIL || 'contact@machinga-immobilier.ga'}</li>
@@ -27,8 +27,8 @@ export default function ContactPage() {
         <div>
           <h2 className="text-xl font-semibold mb-4">Horaires</h2>
           <ul className="text-gray-700 space-y-2">
-            <li>Lun – Ven : 8h30 – 16h30</li>
-            <li>Sam : 9h – 12h</li>
+            <li>Lun - Ven : 8h30 - 16h30</li>
+            <li>Sam : 9h - 12h</li>
             <li>Dim : Fermé</li>
           </ul>
         </div>
