@@ -42,33 +42,5 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Notification email via Web3Forms (facultatif : si la clé n'est pas
-  // configurée, le message reste tout de même enregistré en base).
-  const web3formsKey = process.env.WEB3FORMS_KEY;
-  if (web3formsKey) {
-    try {
-      await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          access_key: web3formsKey,
-          subject: `Nouveau message - ${nom}`,
-          from_name: 'Site MACHINGA IMMOBILIER',
-          nom,
-          email,
-          telephone,
-          type_transaction: typeTransaction,
-          type_logement: typeLogement,
-          ville,
-          quartier,
-          message
-        })
-      });
-    } catch (err) {
-      // On n'échoue pas la requête si seul l'email de notification échoue :
-      // le message est déjà enregistré et visible dans le dashboard admin.
-    }
-  }
-
   return NextResponse.json({ ok: true });
 }

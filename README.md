@@ -52,7 +52,7 @@ Voir `.env.example` pour la liste complète et des exemples. En résumé :
 | `SUPABASE_SERVICE_ROLE_KEY` | Clé service role (secrète, jamais côté client) |
 | `ADMIN_PASSWORD` | Mot de passe pour te connecter à `/admin` |
 | `SESSION_SECRET` | Chaîne aléatoire longue, sert à signer le cookie de session |
-| `WEB3FORMS_KEY` | Clé gratuite sur [web3forms.com](https://web3forms.com), pour recevoir un email à chaque message de contact |
+| `NEXT_PUBLIC_WEB3FORMS_KEY` | Clé gratuite sur [web3forms.com](https://web3forms.com), pour recevoir un email à chaque message de contact (appelée depuis le navigateur, doit rester préfixée `NEXT_PUBLIC_`) |
 | `CONTACT_TELEPHONE`, `CONTACT_EMAIL` | Coordonnées affichées sur le site (footer, page contact) |
 
 ## 4. Gérer les annonces et les photos (usage quotidien)
@@ -83,7 +83,7 @@ légère basée sur `node:20-alpine`, sortie Next.js "standalone").
    build **Dockerfile** (celui à la racine du projet est détecté automatiquement).
 3. Renseigne les variables d'environnement (les mêmes que `.env.example`) dans
    l'onglet **Environment Variables** de Coolify - surtout `SUPABASE_URL`,
-   `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `WEB3FORMS_KEY`.
+   `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `NEXT_PUBLIC_WEB3FORMS_KEY`.
 4. Port de l'application : `3000`.
 5. Active le déploiement automatique sur push si tu veux du déploiement continu.
 6. Lance le déploiement. Aucun volume disque n'est nécessaire : les annonces

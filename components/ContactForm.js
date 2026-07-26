@@ -73,6 +73,23 @@ function ContactFormInner() {
         throw new Error(data.error || 'Une erreur est survenue, réessayez.');
       }
 
+      const web3formsKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+      if (web3formsKey) {
+        // Envoyée depuis le navigateur : Web3Forms refuse les appels serveur
+        // sur le plan gratuit. On n'échoue pas la requête si la notification
+        // échoue, le message est déjà enregistré et visible dans /admin.
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: web3formsKey,
+            subject: `Nouveau message - ${form.nom}`,
+            from_name: 'Site MACHINGA IMMOBILIER',
+            ...form
+          })
+        }).catch(() => {});
+      }
+
       setStatus('sent');
       setForm(EMPTY);
     } catch (err) {

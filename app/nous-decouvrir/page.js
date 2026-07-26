@@ -42,6 +42,13 @@ const SERVICES = [
       "Conseil en investissement"
     ]
   },
+  {
+    nom: 'Achat/Vente',
+    taux: '10%',
+    detail:
+      "Commission sur la valeur du bien, payable à la signature de l'acte de vente, pour tout type de bien (terrain, maison, appartement, local commercial).",
+    inclus: ['Recherche de biens', 'Négociation', 'Visites accompagnées', 'Suivi jusqu’à la signature de l’acte']
+  },
   { nom: 'Estimation', taux: 'Gratuite', detail: '', inclus: [] }
 ];
 
