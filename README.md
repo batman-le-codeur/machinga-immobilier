@@ -84,6 +84,11 @@ légère basée sur `node:20-alpine`, sortie Next.js "standalone").
 3. Renseigne les variables d'environnement (les mêmes que `.env.example`) dans
    l'onglet **Environment Variables** de Coolify - surtout `SUPABASE_URL`,
    `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `NEXT_PUBLIC_WEB3FORMS_KEY`.
+   ⚠️ Pour `NEXT_PUBLIC_WEB3FORMS_KEY` et `NEXT_PUBLIC_SITE_URL` : coche
+   l'option qui les marque comme **variable de build** (« Available at
+   Buildtime » / « Build Variable » selon la version de Coolify), sinon
+   `next build` ne les recevra pas et le formulaire de contact restera
+   silencieusement cassé en production.
 4. Port de l'application : `3000`.
 5. Active le déploiement automatique sur push si tu veux du déploiement continu.
 6. Lance le déploiement. Aucun volume disque n'est nécessaire : les annonces
