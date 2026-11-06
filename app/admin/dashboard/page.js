@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import ListingsManager from '../../../components/admin/ListingsManager';
 import MessagesManager from '../../../components/admin/MessagesManager';
 import StatsPanel from '../../../components/admin/StatsPanel';
+import OwnersPanel from '../../../components/admin/OwnersPanel';
 
 export default function DashboardPage() {
   const [tab, setTab] = useState('annonces');
@@ -33,9 +34,9 @@ export default function DashboardPage() {
   }
 
   const stats = {
-    total: listings.length,
-    locations: listings.filter((l) => l.type === 'location').length,
-    ventes: listings.filter((l) => l.type === 'vente').length,
+    machinga: listings.filter((l) => !l.ownerId).length,
+    particuliers: listings.filter((l) => l.ownerId).length,
+    aValider: listings.filter((l) => l.moderation === 'en_attente').length,
     messagesNonLus: messages.filter((m) => !m.lu).length
   };
 
@@ -55,11 +56,11 @@ export default function DashboardPage() {
         <p className="text-gray-500">Chargement…</p>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {[
-              ['Annonces au total', stats.total],
-              ['Locations', stats.locations],
-              ['Ventes', stats.ventes],
+              ['Annonces MACHINGA', stats.machinga],
+              ['Annonces de particuliers', stats.particuliers],
+              ['Annonces à valider', stats.aValider],
               ['Messages non lus', stats.messagesNonLus]
             ].map(([label, value]) => (
               <div key={label} className="border border-gray-200 p-5">
@@ -71,7 +72,8 @@ export default function DashboardPage() {
 
           <div className="flex gap-2 mb-8 border-b border-gray-200">
             {[
-              ['annonces', 'Annonces'],
+              ['annonces', `Annonces${stats.aValider ? ` (${stats.aValider} à valider)` : ''}`],
+              ['proprietaires', 'Propriétaires'],
               ['messages', `Messages${stats.messagesNonLus ? ` (${stats.messagesNonLus})` : ''}`],
               ['stats', 'Statistiques']
             ].map(([key, label]) => (
@@ -88,6 +90,7 @@ export default function DashboardPage() {
           </div>
 
           {tab === 'annonces' && <ListingsManager listings={listings} setListings={setListings} />}
+          {tab === 'proprietaires' && <OwnersPanel />}
           {tab === 'messages' && <MessagesManager messages={messages} setMessages={setMessages} />}
           {tab === 'stats' && <StatsPanel />}
         </>

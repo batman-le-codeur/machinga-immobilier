@@ -8,12 +8,14 @@ export async function PUT(request, { params }) {
   const updates = Object.fromEntries(
     Object.entries(fromListingInput(body)).filter(([, v]) => v !== undefined)
   );
+  // Annonce de particulier modifiee par l'admin : localisation recomposee.
+  if (body.ville && body.quartier) updates.localisation = `${body.quartier}, ${body.ville}`;
 
   const { data, error } = await supabase
     .from('listings')
     .update(updates)
     .eq('id', params.id)
-    .select()
+    .select('*, owner:owners(nom, telephone, email)')
     .single();
 
   if (error) {

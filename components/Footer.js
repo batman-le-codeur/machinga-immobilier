@@ -28,6 +28,9 @@ export default function Footer() {
             <li><Link href="/locations" className="transition-colors hover:text-white">Locations</Link></li>
             <li><Link href="/ventes" className="transition-colors hover:text-white">Ventes</Link></li>
             <li><Link href="/contact" className="transition-colors hover:text-white">Contactez-nous</Link></li>
+            <li><Link href="/compte" className="transition-colors hover:text-white">Espace propriétaire</Link></li>
+            <li><Link href="/conditions-utilisation" className="transition-colors hover:text-white">Conditions d&apos;utilisation</Link></li>
+            <li><Link href="/politique-confidentialite" className="transition-colors hover:text-white">Politique de confidentialité</Link></li>
           </ul>
         </div>
 

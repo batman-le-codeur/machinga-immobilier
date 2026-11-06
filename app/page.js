@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getListings } from '../lib/publicData';
 import ListingCard from '../components/ListingCard';
+import CertifiedBadge from '../components/CertifiedBadge';
 import FAQ from '../components/FAQ';
 import Testimonials from '../components/Testimonials';
 import Reveal from '../components/Reveal';
@@ -23,7 +24,10 @@ const CATEGORIES = [
 ];
 
 export default async function HomePage() {
-  const recentListings = await getListings({ limit: 6 });
+  const [machingaListings, ownerListings] = await Promise.all([
+    getListings({ source: 'machinga', limit: 6 }),
+    getListings({ source: 'particulier', limit: 3 })
+  ]);
 
   return (
     <div>
@@ -96,18 +100,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Récemment ajouté */}
+      {/* Selection MACHINGA (annonces certifiees) */}
       <section className="max-w-6xl mx-auto px-6 py-16">
-        <Reveal as="h2" className="text-2xl font-semibold mb-8">
-          Récemment ajouté
+        <Reveal className="flex flex-wrap items-end justify-between gap-3 mb-8">
+          <div>
+            <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-secondary mb-2">
+              <CertifiedBadge label="Certifié" />
+              Publiées et suivies par notre équipe
+            </p>
+            <h2 className="text-2xl font-semibold">La sélection MACHINGA</h2>
+          </div>
+          <Link href="/locations?source=machinga" className="text-sm font-medium text-primary hover:underline">
+            Toutes les annonces certifiées &rarr;
+          </Link>
         </Reveal>
-        {recentListings.length === 0 ? (
+        {machingaListings.length === 0 ? (
           <p className="text-gray-500">
             Aucune annonce publiée pour le moment. Revenez bientôt.
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {recentListings.map((listing, i) => (
+            {machingaListings.map((listing, i) => (
               <Reveal key={listing.id} delay={i * 80} className="h-full">
                 <ListingCard listing={listing} />
               </Reveal>
@@ -115,6 +128,40 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {/* Annonces de particuliers */}
+      {ownerListings.length > 0 && (
+        <section className="bg-offwhite">
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <Reveal className="flex flex-wrap items-end justify-between gap-3 mb-8">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-secondary mb-2">
+                  Vérifiées par MACHINGA avant publication
+                </p>
+                <h2 className="text-2xl font-semibold">Annonces de particuliers</h2>
+              </div>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link href="/locations?source=particulier" className="text-sm font-medium text-primary hover:underline">
+                  Toutes les annonces de particuliers &rarr;
+                </Link>
+                <Link
+                  href="/compte"
+                  className="bg-secondary text-white px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary-light"
+                >
+                  Publier mon bien
+                </Link>
+              </div>
+            </Reveal>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {ownerListings.map((listing, i) => (
+                <Reveal key={listing.id} delay={i * 80} className="h-full">
+                  <ListingCard listing={listing} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Affiche promotionnelle */}
       <section className="max-w-6xl mx-auto px-6 py-16">

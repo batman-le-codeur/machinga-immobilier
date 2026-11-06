@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 const LOGEMENT_OPTIONS = {
   location: ['Chambres/Studios', 'Apparts/Maisons', 'Meublés', 'Locaux com./bureaux'],
@@ -232,7 +233,13 @@ function ContactFormInner() {
           onChange={handleChange}
           className="mt-0.5 h-4 w-4 accent-primary shrink-0"
         />
-        J&apos;accepte que mes données soient utilisées pour le traitement de ma demande
+        <span>
+          J&apos;accepte que mes données soient utilisées pour le traitement de ma demande (voir notre{' '}
+          <Link href="/politique-confidentialite" target="_blank" className="text-primary underline">
+            politique de confidentialité
+          </Link>
+          )
+        </span>
       </label>
 
       {status === 'error' && <p className="text-sm text-red-600">{errorMsg}</p>}

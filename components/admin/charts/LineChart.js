@@ -60,7 +60,7 @@ export default function LineChart({ data }) {
           d={linePath}
           fill="none"
           stroke={COLOR}
-          strokeWidth="1.2"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"

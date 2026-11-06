@@ -141,7 +141,7 @@ function MobileAccordion({ item, onNavigate }) {
   );
 }
 
-export default function HeaderClient({ authed }) {
+export default function HeaderClient({ authed, ownerAuthed }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -204,6 +204,15 @@ export default function HeaderClient({ authed }) {
           {NAV.map((item) => (
             <DesktopDropdown key={item.href} item={item} />
           ))}
+          {/* Masque pour l'admin : son tableau de bord prend deja cette place. */}
+          {!authed && (
+            <Link
+              href="/compte"
+              className="bg-secondary text-white px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary-light"
+            >
+              {ownerAuthed ? 'Mon espace' : 'Publier un bien'}
+            </Link>
+          )}
           {authed && (
             <div className="flex items-center gap-3 pl-5 ml-1 border-l border-gray-200">
               <Link
@@ -282,6 +291,15 @@ export default function HeaderClient({ authed }) {
               {NAV.map((item) => (
                 <MobileAccordion key={item.href} item={item} onNavigate={closeMenu} />
               ))}
+              <li className="px-6 py-3">
+                <Link
+                  href="/compte"
+                  onClick={closeMenu}
+                  className="block text-center bg-secondary text-white px-4 py-2.5 text-sm font-medium transition-colors hover:bg-secondary-light"
+                >
+                  {ownerAuthed ? 'Mon espace propriétaire' : 'Publier un bien'}
+                </Link>
+              </li>
               {authed && (
                 <>
                   <li className="border-t border-gray-200 mt-2 pt-2">

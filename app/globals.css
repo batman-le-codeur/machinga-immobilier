@@ -6,6 +6,20 @@
 
 html {
   scroll-behavior: smooth;
+  /* Le site n'a qu'un theme clair : sans cette declaration, un navigateur en
+     mode sombre peint les champs de formulaire en noir. */
+  color-scheme: light;
+}
+
+/* Couleurs explicites des champs (en couche "base" : les classes Tailwind
+   comme bg-gray-100 sur un champ desactive restent prioritaires). */
+@layer base {
+  input,
+  select,
+  textarea {
+    background-color: #fff;
+    color: #2D2D2D;
+  }
 }
 
 body {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PhotoUploader from './PhotoUploader';
+import ListingCard from '../ListingCard';
 
 const CATEGORIES = {
   location: ['Chambres/Studios', 'Apparts/Maisons', 'Meublés', 'Locaux com./bureaux'],
@@ -19,11 +20,19 @@ const EMPTY = {
   sallesDeBain: '',
   description: '',
   photos: [],
-  statut: 'disponible'
+  statut: 'disponible',
+  ville: '',
+  quartier: ''
 };
 
-export default function ListingForm({ initial, onSaved, onCancel }) {
-  const [form, setForm] = useState(initial || EMPTY);
+// withCityFields : l'admin modifie une annonce de particulier.
+// ownerMode : formulaire de l'espace proprietaire (locations uniquement,
+// ville + quartier au lieu d'une localisation libre, API /api/compte/annonces).
+export default function ListingForm({ initial, onSaved, onCancel, ownerMode = false, withCityFields = false }) {
+  const [form, setForm] = useState({ ...EMPTY, ...(initial || {}) });
+  const apiBase = ownerMode ? '/api/compte/annonces' : '/api/listings';
+  // Ville + quartier (annonces de particuliers) au lieu d'une localisation libre.
+  const cityFields = ownerMode || withCityFields;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -37,7 +46,7 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
     setError('');
 
     const isEdit = Boolean(form.id);
-    const url = isEdit ? `/api/listings/${form.id}` : '/api/listings';
+    const url = isEdit ? `${apiBase}/${form.id}` : apiBase;
     const method = isEdit ? 'PUT' : 'POST';
 
     try {
@@ -59,6 +68,7 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5 bg-offwhite border border-gray-200 p-6">
       <div className="grid sm:grid-cols-2 gap-5">
+        {!ownerMode && (
         <div>
           <label className="block text-sm font-medium mb-1">Type d&apos;annonce</label>
           <select
@@ -70,6 +80,7 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
             <option value="vente">Vente</option>
           </select>
         </div>
+        )}
         <div>
           <label className="block text-sm font-medium mb-1">Catégorie</label>
           <select
@@ -97,7 +108,7 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Prix (FCFA{form.type === 'location' ? '/mois' : ''})
+            {ownerMode ? 'Loyer mensuel (FCFA)' : `Prix (FCFA${form.type === 'location' ? '/mois' : ''})`}
           </label>
           <input
             required
@@ -107,17 +118,50 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
             onChange={(e) => update('prix', e.target.value)}
             className="w-full border border-gray-300 px-3 py-2"
           />
+          {Number(form.prix) > 0 && (
+            <p className="text-xs text-gray-500 mt-1">
+              Affiché : {new Intl.NumberFormat('fr-FR').format(Number(form.prix))} FCFA
+              {form.type === 'location' ? ' / mois' : ''}
+            </p>
+          )}
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Localisation</label>
-          <input
-            required
-            value={form.localisation}
-            onChange={(e) => update('localisation', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
-          />
-        </div>
+        {!cityFields && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Localisation</label>
+            <input
+              required
+              value={form.localisation}
+              onChange={(e) => update('localisation', e.target.value)}
+              className="w-full border border-gray-300 px-3 py-2"
+            />
+          </div>
+        )}
       </div>
+
+      {cityFields && (
+        <div className="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium mb-1">Ville</label>
+            <input
+              required
+              value={form.ville}
+              onChange={(e) => update('ville', e.target.value)}
+              placeholder="Ex. Libreville"
+              className="w-full border border-gray-300 px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Quartier</label>
+            <input
+              required
+              value={form.quartier}
+              onChange={(e) => update('quartier', e.target.value)}
+              placeholder="Ex. Glass, Nzeng-Ayong…"
+              className="w-full border border-gray-300 px-3 py-2"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="grid sm:grid-cols-3 gap-5">
         <div>
@@ -177,6 +221,32 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
 
       <PhotoUploader photos={form.photos || []} onChange={(photos) => update('photos', photos)} />
 
+      {ownerMode && form.titre && (
+        <div>
+          <p className="text-sm font-medium mb-2">Aperçu de votre annonce</p>
+          {/* Apercu non cliquable, tel qu'il apparaitra dans les resultats. */}
+          <div className="max-w-xs pointer-events-none select-none" aria-hidden="true">
+            <ListingCard
+              listing={{
+                ...form,
+                type: 'location',
+                ownerId: 'apercu',
+                prix: Number(form.prix) || 0,
+                localisation: [form.quartier, form.ville].filter(Boolean).join(', '),
+                photos: form.photos || []
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {ownerMode && (
+        <p className="text-sm text-gray-500">
+          Votre annonce sera vérifiée par MACHINGA IMMOBILIER avant d&apos;être visible sur le site.
+          Toute modification du contenu entraîne une nouvelle vérification.
+        </p>
+      )}
+
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex gap-3">
@@ -185,7 +255,11 @@ export default function ListingForm({ initial, onSaved, onCancel }) {
           disabled={saving}
           className="bg-primary text-white px-6 py-2.5 text-sm font-medium hover:bg-primary-light transition-colors disabled:opacity-60"
         >
-          {saving ? 'Enregistrement…' : "Enregistrer l'annonce"}
+          {saving
+            ? 'Enregistrement…'
+            : ownerMode && !form.id
+              ? 'Envoyer pour validation'
+              : "Enregistrer l'annonce"}
         </button>
         <button
           type="button"

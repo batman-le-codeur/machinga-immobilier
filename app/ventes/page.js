@@ -1,5 +1,5 @@
-import { getListings } from '../../lib/publicData';
-import ListingGrid from '../../components/ListingGrid';
+import { parseSearchFilters, searchListings } from '../../lib/publicData';
+import ListingSearch from '../../components/ListingSearch';
 import PageHeader from '../../components/PageHeader';
 
 export const dynamic = 'force-dynamic';
@@ -12,8 +12,9 @@ export const metadata = {
 
 const CATEGORIES = ['Terrains', 'Apparts/Maisons', 'Locaux com./bureaux', 'Objets divers'];
 
-export default async function VentesPage() {
-  const listings = await getListings({ type: 'vente' });
+export default async function VentesPage({ searchParams }) {
+  const filters = parseSearchFilters(searchParams);
+  const { listings, total, pageCount } = await searchListings('vente', filters);
 
   return (
     <div>
@@ -22,7 +23,14 @@ export default async function VentesPage() {
         subtitle="Terrains, appartements, maisons, locaux commerciaux et biens divers disponibles à la vente."
       />
       <div className="max-w-6xl mx-auto px-6 py-16">
-        <ListingGrid listings={listings} categories={CATEGORIES} />
+        <ListingSearch
+          listings={listings}
+          categories={CATEGORIES}
+          total={total}
+          page={filters.page}
+          pageCount={pageCount}
+          priceLabel="Prix"
+        />
       </div>
     </div>
   );

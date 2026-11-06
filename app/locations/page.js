@@ -1,5 +1,5 @@
-import { getListings } from '../../lib/publicData';
-import ListingGrid from '../../components/ListingGrid';
+import { parseSearchFilters, searchListings } from '../../lib/publicData';
+import ListingSearch from '../../components/ListingSearch';
 import PageHeader from '../../components/PageHeader';
 
 export const dynamic = 'force-dynamic';
@@ -12,8 +12,9 @@ export const metadata = {
 
 const CATEGORIES = ['Chambres/Studios', 'Apparts/Maisons', 'Meublés', 'Locaux com./bureaux'];
 
-export default async function LocationsPage() {
-  const listings = await getListings({ type: 'location' });
+export default async function LocationsPage({ searchParams }) {
+  const filters = parseSearchFilters(searchParams);
+  const { listings, total, pageCount } = await searchListings('location', filters);
 
   return (
     <div>
@@ -22,7 +23,15 @@ export default async function LocationsPage() {
         subtitle="Chambres, studios, appartements, maisons et locaux commerciaux disponibles à la location."
       />
       <div className="max-w-6xl mx-auto px-6 py-16">
-        <ListingGrid listings={listings} categories={CATEGORIES} />
+        <ListingSearch
+          listings={listings}
+          categories={CATEGORIES}
+          total={total}
+          page={filters.page}
+          pageCount={pageCount}
+          showSource
+          priceLabel="Loyer"
+        />
       </div>
     </div>
   );
