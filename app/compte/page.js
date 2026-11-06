@@ -11,9 +11,12 @@ export const metadata = {
   title: 'Mon espace propriétaire - MACHINGA IMMOBILIER'
 };
 
-export default async function ComptePage() {
+export default async function ComptePage({ searchParams }) {
+  // ?publier=1 : bouton "Publier mon bien" de l'accueil, ouvre directement le
+  // formulaire de depot (apres inscription ou connexion si besoin).
+  const publier = searchParams?.publier === '1';
   const owner = await getCurrentOwner();
-  if (!owner) redirect('/compte/connexion');
+  if (!owner) redirect(publier ? '/compte/inscription?publier=1' : '/compte/connexion');
 
   if (!owner.emailVerifie) {
     return (
@@ -37,5 +40,10 @@ export default async function ComptePage() {
     contactEmail: process.env.CONTACT_EMAIL || ''
   };
 
-  return <OwnerSpace owner={owner} account={account} initialListings={(data || []).map(toListingDTO)} />;
+  return <OwnerSpace
+      owner={owner}
+      account={account}
+      initialListings={(data || []).map(toListingDTO)}
+      startCreate={publier}
+    />;
 }

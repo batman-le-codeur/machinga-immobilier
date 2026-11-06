@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { inputClass, labelClass, buttonClass } from './AuthShell';
 
@@ -14,6 +14,12 @@ async function postJson(url, body) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'Une erreur est survenue, réessayez.');
   return data;
+}
+
+// ?publier=1 (bouton "Publier mon bien" de l'accueil) : conserve l'intention
+// entre inscription et connexion, puis ouvre le formulaire de depot.
+function usePublishSuffix() {
+  return useSearchParams().get('publier') === '1' ? '?publier=1' : '';
 }
 
 function useSubmit(action) {
@@ -61,11 +67,12 @@ function PasswordInput({ id, value, onChange, autoComplete }) {
 
 export function LoginForm() {
   const router = useRouter();
+  const suffix = usePublishSuffix();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { loading, error, submit } = useSubmit(async () => {
     await postJson('/api/compte/connexion', { email, password });
-    router.push('/compte');
+    router.push(`/compte${suffix}`);
     router.refresh();
   });
 
@@ -98,7 +105,7 @@ export function LoginForm() {
       </button>
       <p className="text-sm text-center text-gray-500">
         Pas encore de compte ?{' '}
-        <Link href="/compte/inscription" className="text-primary font-medium hover:underline">
+        <Link href={`/compte/inscription${suffix}`} className="text-primary font-medium hover:underline">
           Créer un compte gratuit
         </Link>
       </p>
@@ -108,11 +115,12 @@ export function LoginForm() {
 
 export function SignupForm() {
   const router = useRouter();
+  const suffix = usePublishSuffix();
   const [form, setForm] = useState({ nom: '', telephone: '', email: '', password: '' });
   const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
   const { loading, error, submit } = useSubmit(async () => {
     await postJson('/api/compte/inscription', form);
-    router.push('/compte');
+    router.push(`/compte${suffix}`);
     router.refresh();
   });
 
@@ -176,7 +184,7 @@ export function SignupForm() {
       </p>
       <p className="text-sm text-center text-gray-500">
         Déjà inscrit ?{' '}
-        <Link href="/compte/connexion" className="text-primary font-medium hover:underline">
+        <Link href={`/compte/connexion${suffix}`} className="text-primary font-medium hover:underline">
           Se connecter
         </Link>
       </p>

@@ -218,17 +218,23 @@ function OwnerListingCard({ listing: l, busy, onEdit, onQuick, onDelete }) {
 
 // ------------------------------------------------------------------ Page
 
-export default function OwnerSpace({ owner: initialOwner, account, initialListings }) {
+export default function OwnerSpace({ owner: initialOwner, account, initialListings, startCreate = false }) {
   const router = useRouter();
   const [owner, setOwner] = useState(initialOwner);
   const [listings, setListings] = useState(initialListings);
   const [tab, setTab] = useState('annonces');
   const [filter, setFilter] = useState('toutes');
-  const [mode, setMode] = useState('list'); // list | create | edit
+  const [mode, setMode] = useState(startCreate ? 'create' : 'list'); // list | create | edit
   const [editing, setEditing] = useState(null);
   const [busyId, setBusyId] = useState(null);
   const [notice, setNotice] = useState('');
   const [actionError, setActionError] = useState('');
+
+  // Arrivee par "Publier mon bien" : le formulaire est deja ouvert, on retire
+  // ?publier=1 de l'URL pour qu'un rechargement ramene a la liste.
+  useEffect(() => {
+    if (startCreate) window.history.replaceState(null, '', '/compte');
+  }, [startCreate]);
 
   const counts = listings.reduce((acc, l) => ({ ...acc, [stateOf(l)]: (acc[stateOf(l)] || 0) + 1 }), {});
   const expiringSoon = listings.filter((l) => {

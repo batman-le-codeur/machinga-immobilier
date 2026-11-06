@@ -5,10 +5,8 @@ export const metadata = {
   description: "Conditions d'utilisation du site MACHINGA IMMOBILIER et de son espace propriétaire."
 };
 
-// TEXTE PROVISOIRE : le contenu juridique definitif est a fournir par
-// MACHINGA (hors perimetre du devis). Remplacer les sections ci-dessous, puis
-// supprimer l'encadre "version provisoire" et, si le texte change apres la
-// mise en ligne, incrementer TERMS_VERSION dans components/TermsGate.js.
+// Si le texte change apres la mise en ligne, incrementer TERMS_VERSION dans
+// components/TermsGate.js pour que chaque visiteur l'accepte de nouveau.
 const SECTIONS = [
   {
     title: '1. Objet',
@@ -49,9 +47,6 @@ export default function ConditionsPage() {
     <div>
       <PageHeader title="Conditions d'utilisation" />
       <div className="max-w-3xl mx-auto px-6 py-16">
-        <p className="text-sm bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 mb-10">
-          Version provisoire : le texte définitif sera fourni par MACHINGA IMMOBILIER.
-        </p>
         <div className="space-y-8">
           {SECTIONS.map((section) => (
             <section key={section.title}>

@@ -104,17 +104,15 @@ export default function SearchBar() {
   return (
     <div ref={containerRef} className="relative w-full">
       <div
-        className={`flex items-stretch bg-white border transition-shadow rounded-lg overflow-hidden ${
-          showPanel ? 'shadow-2xl border-gray-200 rounded-b-none' : 'shadow-xl border-gray-100'
+        className={`flex items-stretch bg-white border border-gray-200 transition-shadow ${
+          showPanel ? 'shadow-md' : 'shadow-sm'
         }`}
       >
         <div className="flex flex-1 min-w-0 items-center gap-3 px-5 py-4 sm:py-4.5">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-offwhite text-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-              <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0 text-gray-400" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
           <input
             ref={inputRef}
             value={query}
@@ -127,7 +125,7 @@ export default function SearchBar() {
               setOpen(true);
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Rechercher : titre, quartier, catégorie…"
+            placeholder="Rechercher par titre, quartier ou catégorie"
             className="flex-1 min-w-0 text-ink placeholder:text-gray-400 focus:outline-none bg-transparent"
           />
           {query && (
@@ -138,7 +136,7 @@ export default function SearchBar() {
                 inputRef.current?.focus();
               }}
               aria-label="Effacer la recherche"
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 hover:bg-offwhite hover:text-ink transition-colors"
+              className="flex h-7 w-7 shrink-0 items-center justify-center text-gray-400 hover:bg-offwhite hover:text-ink transition-colors"
             >
               &times;
             </button>
@@ -159,9 +157,9 @@ export default function SearchBar() {
       </div>
 
       {showPanel && (
-        <div className="absolute left-0 right-0 top-full bg-white rounded-b-lg shadow-2xl border border-t-0 border-gray-200 overflow-hidden z-30">
+        <div className="absolute left-0 right-0 top-full bg-white shadow-md border border-t-0 border-gray-200 overflow-hidden z-30">
           {loading || listings === null ? (
-            <p className="px-5 py-4 text-sm text-gray-500">Recherche…</p>
+            <p className="px-5 py-4 text-sm text-gray-500">Recherche en cours</p>
           ) : results.length === 0 ? (
             <p className="px-5 py-4 text-sm text-gray-500">
               Aucune annonce ne correspond à « {query} ».
@@ -178,7 +176,7 @@ export default function SearchBar() {
                       highlighted === i ? 'bg-offwhite border-l-primary' : 'border-l-transparent'
                     }`}
                   >
-                    <div className="relative h-12 w-12 shrink-0 rounded-sm bg-offwhite border border-gray-200 overflow-hidden">
+                    <div className="relative h-12 w-12 shrink-0 bg-offwhite border border-gray-200 overflow-hidden">
                       {l.photos && l.photos[0] ? (
                         <Image src={l.photos[0]} alt="" fill sizes="48px" className="object-cover" />
                       ) : null}
@@ -186,7 +184,7 @@ export default function SearchBar() {
                     <div className="min-w-0 flex-1 text-left">
                       <p className="text-sm font-medium text-ink truncate">{l.titre}</p>
                       <p className="text-xs text-gray-500 truncate">
-                        {l.category} - {l.localisation}
+                        {l.category}, {l.localisation}
                       </p>
                     </div>
                     <p className="text-sm font-medium text-primary shrink-0">

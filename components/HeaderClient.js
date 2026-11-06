@@ -207,7 +207,7 @@ export default function HeaderClient({ authed, ownerAuthed }) {
           {/* Masque pour l'admin : son tableau de bord prend deja cette place. */}
           {!authed && (
             <Link
-              href="/compte"
+              href={ownerAuthed ? '/compte' : '/compte?publier=1'}
               className="bg-secondary text-white px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary-light"
             >
               {ownerAuthed ? 'Mon espace' : 'Publier un bien'}
@@ -293,7 +293,7 @@ export default function HeaderClient({ authed, ownerAuthed }) {
               ))}
               <li className="px-6 py-3">
                 <Link
-                  href="/compte"
+                  href={ownerAuthed ? '/compte' : '/compte?publier=1'}
                   onClick={closeMenu}
                   className="block text-center bg-secondary text-white px-4 py-2.5 text-sm font-medium transition-colors hover:bg-secondary-light"
                 >
