@@ -38,21 +38,25 @@ export default function TermsGate() {
     setOpen(!accepted);
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [open]);
-
   // Les pages des conditions et de confidentialite doivent rester lisibles, et
   // l'admin n'est pas concerne.
   const exempt =
     pathname.startsWith('/conditions-utilisation') ||
     pathname.startsWith('/politique-confidentialite') ||
     pathname.startsWith('/admin');
-  if (!open || exempt) return null;
+  const visible = open && !exempt;
+
+  // Bloque le defilement de la page seulement quand la fenetre est affichee
+  // (sinon, apres un clic vers les conditions, la page resterait bloquee).
+  useEffect(() => {
+    if (!visible) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [visible]);
+
+  if (!visible) return null;
 
   function accept() {
     try {
