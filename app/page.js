@@ -253,10 +253,10 @@ export default async function HomePage() {
           <Reveal className="mx-auto max-w-md lg:mx-0">
             <div className="border border-gray-200 overflow-hidden transition-all hover:shadow-xl">
               <Image
-                src="/affiche.jpg"
-                alt="Machinga Immobilier : 30% sur les frais de commission, visite gratuite"
-                width={1100}
-                height={1375}
+                src="/affiche-services.jpg"
+                alt="Machinga Immobilier, nos services : annonces gratuites, achat et vente, location, gestion de biens"
+                width={1024}
+                height={1280}
                 sizes="(min-width: 1024px) 448px, (min-width: 768px) 448px, 90vw"
                 className="w-full h-auto"
               />
