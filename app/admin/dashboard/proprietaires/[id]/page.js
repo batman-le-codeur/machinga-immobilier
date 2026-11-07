@@ -145,7 +145,7 @@ export default async function OwnerAdminPage({ params }) {
                     Déposée le {new Date(l.dateAjout).toLocaleDateString('fr-FR')}
                   </span>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <ListingCard listing={l} />
                 </div>
                 {l.moderation === 'refusee' && l.motifRefus && (

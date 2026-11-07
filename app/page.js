@@ -205,7 +205,7 @@ export default async function HomePage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {machingaListings.map((listing, i) => (
-              <Reveal key={listing.id} delay={i * 80} className="h-full">
+              <Reveal key={listing.id} delay={i * 80} className="h-full min-w-0">
                 <ListingCard listing={listing} />
               </Reveal>
             ))}
@@ -238,7 +238,7 @@ export default async function HomePage() {
             </Reveal>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {ownerListings.map((listing, i) => (
-                <Reveal key={listing.id} delay={i * 80} className="h-full">
+                <Reveal key={listing.id} delay={i * 80} className="h-full min-w-0">
                   <ListingCard listing={listing} />
                 </Reveal>
               ))}

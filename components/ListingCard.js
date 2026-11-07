@@ -55,7 +55,7 @@ export default function ListingCard({ listing }) {
   const photoCount = listing.photos ? listing.photos.length : 0;
 
   return (
-    <article className="group h-full flex flex-col bg-white border border-gray-200 rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <article className="group h-full min-w-0 flex flex-col bg-white border border-gray-200 rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <Link href={`/annonces/${listing.id}`} className="flex flex-1 flex-col">
         <div className="relative aspect-[4/3] bg-offwhite flex items-center justify-center overflow-hidden">
           {cover ? (
