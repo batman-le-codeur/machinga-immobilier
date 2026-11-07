@@ -264,13 +264,14 @@ export default async function HomePage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <p className="uppercase tracking-widest text-sm text-secondary mb-3">Offre du moment</p>
+            <p className="uppercase tracking-widest text-sm text-secondary mb-3">Nos services</p>
             <h2 className="text-2xl md:text-3xl font-semibold mb-4 leading-snug">
-              30% sur les frais de commission et visite gratuite
+              Un accompagnement complet pour tous vos projets immobiliers
             </h2>
             <p className="text-gray-600 leading-relaxed mb-8">
-              Contactez-nous directement par le canal de votre choix, notre équipe vous répond
-              rapidement.
+              Nous publions gratuitement vos biens, vous accompagnons dans vos achats et ventes,
+              vous aidons à trouver votre location et gérons vos biens à votre place. Contactez-nous
+              par le canal de votre choix, notre équipe vous répond rapidement.
             </p>
             <SocialLinks variant="light" />
             <Link
