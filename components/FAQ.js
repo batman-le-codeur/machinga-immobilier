@@ -13,7 +13,7 @@ const QUESTIONS = [
   },
   {
     q: 'Quels sont vos frais de gestion locative ?',
-    a: '30% du premier loyer perçu, puis 10% des loyers suivants, en échange d\u2019un suivi complet du bien et du locataire.'
+    a: 'La gestion locative est proposée sur devis, selon votre bien et vos besoins. Elle comprend un suivi complet du bien et du locataire. Contactez-nous pour recevoir votre devis.'
   },
   {
     q: 'Intervenez-vous pour l\u2019achat et la vente de terrains ?',

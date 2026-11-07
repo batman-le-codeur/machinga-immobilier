@@ -5,14 +5,13 @@ import SocialLinks from '../../components/SocialLinks';
 const SERVICES = [
   {
     nom: 'Annonces (publication de biens)',
-    taux: '10% du loyer / 30 jours de diffusion',
-    detail:
-      "Chambres, studios, appartements, meublés, maisons, locaux commerciaux et immeubles. Commission payable à la signature du bail.",
+    taux: 'Gratuit',
+    detail: 'Chambres, studios, appartements, meublés, maisons, locaux commerciaux et immeubles.',
     inclus: ['État des lieux', 'Vérifications diverses', 'Prise d’images', 'Pose d’affiches']
   },
   {
     nom: 'Gestion locative',
-    taux: '30% le 1er mois, puis 10%/mois',
+    taux: 'Sur devis',
     detail: 'Frais de mise en location inclus, sur tous types de biens.',
     inclus: [
       'Visites gratuites',
