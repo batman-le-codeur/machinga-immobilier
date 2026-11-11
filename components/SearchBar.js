@@ -4,11 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-
-function formatPrice(prix, type) {
-  const formatted = new Intl.NumberFormat('fr-FR').format(prix);
-  return type === 'location' ? `${formatted} FCFA/mois` : `${formatted} FCFA`;
-}
+import { formatListingPrice } from '../lib/price';
 
 export default function SearchBar() {
   const router = useRouter();
@@ -188,7 +184,7 @@ export default function SearchBar() {
                       </p>
                     </div>
                     <p className="text-sm font-medium text-primary shrink-0">
-                      {formatPrice(l.prix, l.type)}
+                      {formatListingPrice(l.prix, l.type, l.periode)}
                     </p>
                   </Link>
                 </li>

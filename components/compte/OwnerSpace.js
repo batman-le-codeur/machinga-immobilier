@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ListingForm from '../admin/ListingForm';
 import AccountTab from './AccountTab';
+import { formatListingPrice } from '../../lib/price';
 
 const DAY = 86400000;
 const EXPIRY_WARNING_DAYS = 7;
@@ -41,10 +42,6 @@ function stateOf(l) {
 
 function daysLeft(l) {
   return l.expireLe ? Math.ceil((new Date(l.expireLe).getTime() - Date.now()) / DAY) : null;
-}
-
-function formatPrice(prix) {
-  return `${new Intl.NumberFormat('fr-FR').format(prix)} FCFA/mois`;
 }
 
 function formatDate(iso, withYear = true) {
@@ -129,7 +126,7 @@ function OwnerListingCard({ listing: l, busy, onEdit, onQuick, onDelete }) {
         <p className="text-xs uppercase tracking-wide text-secondary mb-1">{l.category}</p>
         <h3 className="font-semibold text-ink leading-snug line-clamp-2">{l.titre}</h3>
         <p className="text-sm text-gray-500 mt-0.5 truncate">{l.localisation}</p>
-        <p className="text-primary font-semibold mt-2">{formatPrice(l.prix)}</p>
+        <p className="text-primary font-semibold mt-2">{formatListingPrice(l.prix, 'location', l.periode)}</p>
 
         <div className="mt-3 text-xs leading-relaxed">
           {state === 'en_attente' && (

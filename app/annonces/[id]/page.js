@@ -15,6 +15,7 @@ import ListingDescription from '../../../components/ListingDescription';
 import ListingCard from '../../../components/ListingCard';
 import CertifiedBadge from '../../../components/CertifiedBadge';
 import CallOwnerButton from '../../../components/CallOwnerButton';
+import { formatListingPrice } from '../../../lib/price';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,11 +24,6 @@ const STATUT_LABEL = {
   reserve: 'Réservé',
   loue_vendu: 'Loué / Vendu'
 };
-
-function formatPrice(prix, type) {
-  const formatted = new Intl.NumberFormat('fr-FR').format(prix);
-  return type === 'location' ? `${formatted} FCFA/mois` : `${formatted} FCFA`;
-}
 
 // Annonce a afficher : publique si elle est en ligne ; sinon seulement en
 // apercu pour l'admin ou pour son proprietaire.
@@ -50,7 +46,7 @@ export async function generateMetadata({ params }) {
   if (!listing) return { title: 'Annonce introuvable - MACHINGA IMMOBILIER' };
   if (hidden) return { title: `Aperçu : ${listing.titre}`, robots: { index: false, follow: false } };
 
-  const title = `${listing.titre} - ${formatPrice(listing.prix, listing.type)} | MACHINGA IMMOBILIER`;
+  const title = `${listing.titre} - ${formatListingPrice(listing.prix, listing.type, listing.periode)} | MACHINGA IMMOBILIER`;
   const description = `${listing.category} à ${listing.localisation}${
     listing.surface ? ` - ${listing.surface} m²` : ''
   }${listing.description ? `. ${listing.description}` : ''}`.slice(0, 300);
@@ -137,7 +133,7 @@ export default async function AnnoncePage({ params }) {
 
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <p className="text-2xl font-semibold text-primary">
-                {formatPrice(listing.prix, listing.type)}
+                {formatListingPrice(listing.prix, listing.type, listing.periode)}
               </p>
               <span className="text-xs px-2.5 py-1 bg-offwhite border border-gray-200 text-gray-600">
                 {STATUT_LABEL[listing.statut] || listing.statut}

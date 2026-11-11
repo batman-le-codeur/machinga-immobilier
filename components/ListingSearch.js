@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ListingCard from './ListingCard';
+import { PERIODES } from '../lib/price';
 
 const SORTS = [
   ['pertinence', 'Certifiées MACHINGA d’abord'],
@@ -19,6 +20,9 @@ const SOURCES = [
 ];
 
 const ROOMS = ['', '1', '2', '3', '4', '5'];
+
+// Libelles du filtre de periode de location
+const PERIODE_FILTER = { jour: 'À la journée', semaine: 'À la semaine', mois: 'Au mois' };
 
 function formatAmount(value) {
   return new Intl.NumberFormat('fr-FR').format(Number(value));
@@ -38,6 +42,7 @@ function SearchIcon({ className = '' }) {
 // tri) et le budget / les chambres dans un panneau
 // "Filtres". Tout vit dans l'URL : une recherche se partage telle quelle.
 // showSource : filtre par origine, utile seulement sur les locations.
+// showPeriode : filtre par periode de location (jour, semaine, mois).
 export default function ListingSearch({
   listings,
   categories,
@@ -45,7 +50,8 @@ export default function ListingSearch({
   page,
   pageCount,
   priceLabel,
-  showSource = false
+  showSource = false,
+  showPeriode = false
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -61,6 +67,7 @@ export default function ListingSearch({
   const [panelOpen, setPanelOpen] = useState(false);
   const [budget, setBudget] = useState({ min: param('prixMin'), max: param('prixMax') });
   const [rooms, setRooms] = useState(param('chambres'));
+  const [periode, setPeriode] = useState(param('periode'));
   const panelRef = useRef(null);
   const debounce = useRef(null);
 
@@ -71,6 +78,7 @@ export default function ListingSearch({
     setQuery((current) => (current.trim() === fromUrl ? current : fromUrl));
     setBudget({ min: param('prixMin'), max: param('prixMax') });
     setRooms(param('chambres'));
+    setPeriode(param('periode'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
@@ -120,11 +128,12 @@ export default function ListingSearch({
 
   function applyPanel(e) {
     e.preventDefault();
-    go({ prixMin: budget.min, prixMax: budget.max, chambres: rooms });
+    go({ prixMin: budget.min, prixMax: budget.max, chambres: rooms, periode });
     setPanelOpen(false);
   }
 
-  const advancedCount = [param('prixMin') || param('prixMax'), param('chambres')].filter(Boolean).length;
+  const advancedCount = [param('prixMin') || param('prixMax'), param('chambres'), param('periode')].filter(Boolean)
+    .length;
 
   const chips = [
     urlQuery && { key: 'q', label: `« ${urlQuery} »`, clear: { q: '' } },
@@ -141,7 +150,12 @@ export default function ListingSearch({
       }`,
       clear: { prixMin: '', prixMax: '' }
     },
-    param('chambres') && { key: 'chambres', label: `${param('chambres')} chambre(s) ou +`, clear: { chambres: '' } }
+    param('chambres') && { key: 'chambres', label: `${param('chambres')} chambre(s) ou +`, clear: { chambres: '' } },
+    PERIODE_FILTER[param('periode')] && {
+      key: 'periode',
+      label: PERIODE_FILTER[param('periode')],
+      clear: { periode: '' }
+    }
   ].filter(Boolean);
 
   const inputClass =
@@ -254,12 +268,33 @@ export default function ListingSearch({
                   ))}
                 </div>
               </fieldset>
+              {showPeriode && (
+                <fieldset>
+                  <legend className="text-sm font-semibold text-ink mb-2">Durée de location</legend>
+                  <div className="flex flex-wrap gap-2">
+                    {['', ...PERIODES.map((p) => p.value)].map((value) => (
+                      <button
+                        key={value || 'all'}
+                        type="button"
+                        onClick={() => setPeriode(value)}
+                        aria-pressed={periode === value}
+                        className={`h-9 rounded-full border px-3 text-sm transition-colors ${
+                          periode === value ? 'border-primary bg-primary text-white' : 'border-gray-300 hover:border-primary'
+                        }`}
+                      >
+                        {PERIODE_FILTER[value] || 'Tout'}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              )}
               <div className="flex items-center justify-between pt-1">
                 <button
                   type="button"
                   onClick={() => {
                     setBudget({ min: '', max: '' });
                     setRooms('');
+                    setPeriode('');
                   }}
                   className="text-sm text-gray-500 hover:text-primary"
                 >

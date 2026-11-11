@@ -30,6 +30,7 @@ export default async function LocationsPage({ searchParams }) {
           page={filters.page}
           pageCount={pageCount}
           showSource
+          showPeriode
           priceLabel="Loyer"
         />
       </div>

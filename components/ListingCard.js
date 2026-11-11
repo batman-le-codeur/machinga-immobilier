@@ -1,11 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import CertifiedBadge from './CertifiedBadge';
-
-function formatPrice(prix, type) {
-  const formatted = new Intl.NumberFormat('fr-FR').format(prix);
-  return type === 'location' ? `${formatted} FCFA/mois` : `${formatted} FCFA`;
-}
+import { formatListingPrice } from '../lib/price';
 
 // "Aujourd'hui", "Hier", "Il y a 5 jours", "Il y a 3 semaines"… (au jour pres,
 // pour que le rendu serveur et le rendu navigateur affichent la meme chose).
@@ -137,7 +133,7 @@ export default function ListingCard({ listing }) {
       </Link>
 
       <div className="px-5 py-4 border-t border-gray-100 flex items-center justify-between gap-3">
-        <p className="text-primary font-semibold">{formatPrice(listing.prix, listing.type)}</p>
+        <p className="text-primary font-semibold">{formatListingPrice(listing.prix, listing.type, listing.periode)}</p>
         <Link
           href={
             // Annonce de particulier : le contact se fait directement avec
