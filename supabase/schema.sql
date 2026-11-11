@@ -12,8 +12,9 @@ create table if not exists listings (
   category text not null,
   titre text not null,
   prix numeric not null default 0,
-  -- Periode de location (jour, semaine, mois) : voir migrations/002_periode_location.sql
-  periode text not null default 'mois' check (periode in ('jour', 'semaine', 'mois')),
+  -- Duree de location (ex. 3 jours, 6 mois) : voir migrations 002 et 003
+  periode text not null default 'mois' check (periode in ('jour', 'semaine', 'mois', 'annee')),
+  periode_nombre integer not null default 1 check (periode_nombre between 1 and 365),
   localisation text not null default '',
   surface numeric,
   chambres integer,

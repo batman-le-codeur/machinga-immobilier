@@ -133,7 +133,7 @@ export default function ListingCard({ listing }) {
       </Link>
 
       <div className="px-5 py-4 border-t border-gray-100 flex items-center justify-between gap-3">
-        <p className="text-primary font-semibold">{formatListingPrice(listing.prix, listing.type, listing.periode)}</p>
+        <p className="text-primary font-semibold">{formatListingPrice(listing.prix, listing.type, listing.periode, listing.periodeNombre)}</p>
         <Link
           href={
             // Annonce de particulier : le contact se fait directement avec

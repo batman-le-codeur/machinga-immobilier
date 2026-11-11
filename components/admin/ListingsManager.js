@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ListingForm from './ListingForm';
 import RefusalForm from './RefusalForm';
 import { downloadCsv } from '../../lib/exportCsv';
-import { formatListingPrice } from '../../lib/price';
+import { formatListingPrice, describePeriode } from '../../lib/price';
 
 const STATUT_LABEL = {
   disponible: 'Disponible',
@@ -112,7 +112,7 @@ export default function ListingsManager({ listings, setListings }) {
       { label: 'Type', value: (l) => (l.type === 'location' ? 'Location' : 'Vente') },
       { label: 'Catégorie', value: (l) => l.category },
       { label: 'Prix (FCFA)', value: (l) => l.prix },
-      { label: 'Période', value: (l) => (l.type === 'location' ? l.periode || 'mois' : '') },
+      { label: 'Période', value: (l) => (l.type === 'location' ? describePeriode(l.periode, l.periodeNombre) : '') },
       { label: 'Localisation', value: (l) => l.localisation },
       { label: 'Surface (m²)', value: (l) => l.surface || '' },
       { label: 'Chambres', value: (l) => l.chambres || '' },
@@ -231,7 +231,7 @@ export default function ListingsManager({ listings, setListings }) {
                     <p className="font-medium text-ink">{l.titre}</p>
                     <p className="text-sm text-gray-500">
                       {l.type === 'location' ? 'Location' : 'Vente'} · {l.category} · {l.localisation} ·{' '}
-                      <span className="text-primary font-medium">{formatListingPrice(l.prix, l.type, l.periode)}</span>
+                      <span className="text-primary font-medium">{formatListingPrice(l.prix, l.type, l.periode, l.periodeNombre)}</span>
                     </p>
                     {l.ownerId && l.owner && (
                       <p className="text-xs text-gray-500 mt-1">

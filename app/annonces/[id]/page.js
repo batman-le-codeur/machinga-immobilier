@@ -46,7 +46,7 @@ export async function generateMetadata({ params }) {
   if (!listing) return { title: 'Annonce introuvable - MACHINGA IMMOBILIER' };
   if (hidden) return { title: `Aperçu : ${listing.titre}`, robots: { index: false, follow: false } };
 
-  const title = `${listing.titre} - ${formatListingPrice(listing.prix, listing.type, listing.periode)} | MACHINGA IMMOBILIER`;
+  const title = `${listing.titre} - ${formatListingPrice(listing.prix, listing.type, listing.periode, listing.periodeNombre)} | MACHINGA IMMOBILIER`;
   const description = `${listing.category} à ${listing.localisation}${
     listing.surface ? ` - ${listing.surface} m²` : ''
   }${listing.description ? `. ${listing.description}` : ''}`.slice(0, 300);
@@ -133,7 +133,7 @@ export default async function AnnoncePage({ params }) {
 
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <p className="text-2xl font-semibold text-primary">
-                {formatListingPrice(listing.prix, listing.type, listing.periode)}
+                {formatListingPrice(listing.prix, listing.type, listing.periode, listing.periodeNombre)}
               </p>
               <span className="text-xs px-2.5 py-1 bg-offwhite border border-gray-200 text-gray-600">
                 {STATUT_LABEL[listing.statut] || listing.statut}

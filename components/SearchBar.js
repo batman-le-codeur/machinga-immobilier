@@ -184,7 +184,7 @@ export default function SearchBar() {
                       </p>
                     </div>
                     <p className="text-sm font-medium text-primary shrink-0">
-                      {formatListingPrice(l.prix, l.type, l.periode)}
+                      {formatListingPrice(l.prix, l.type, l.periode, l.periodeNombre)}
                     </p>
                   </Link>
                 </li>

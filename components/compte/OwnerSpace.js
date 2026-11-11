@@ -126,7 +126,7 @@ function OwnerListingCard({ listing: l, busy, onEdit, onQuick, onDelete }) {
         <p className="text-xs uppercase tracking-wide text-secondary mb-1">{l.category}</p>
         <h3 className="font-semibold text-ink leading-snug line-clamp-2">{l.titre}</h3>
         <p className="text-sm text-gray-500 mt-0.5 truncate">{l.localisation}</p>
-        <p className="text-primary font-semibold mt-2">{formatListingPrice(l.prix, 'location', l.periode)}</p>
+        <p className="text-primary font-semibold mt-2">{formatListingPrice(l.prix, 'location', l.periode, l.periodeNombre)}</p>
 
         <div className="mt-3 text-xs leading-relaxed">
           {state === 'en_attente' && (

@@ -9,6 +9,7 @@ const CONTENT_FIELDS = [
   'titre',
   'prix',
   'periode',
+  'periode_nombre',
   'ville',
   'quartier',
   'surface',

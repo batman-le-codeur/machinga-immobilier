@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import PhotoUploader from './PhotoUploader';
 import ListingCard from '../ListingCard';
-import { PERIODES, formatListingPrice } from '../../lib/price';
+import { PERIODES, MAX_PERIODE_NOMBRE, formatListingPrice } from '../../lib/price';
 
 const CATEGORIES = {
   location: ['Chambres/Studios', 'Apparts/Maisons', 'Meublés', 'Locaux com./bureaux'],
@@ -16,6 +16,7 @@ const EMPTY = {
   titre: '',
   prix: '',
   periode: 'mois',
+  periodeNombre: 1,
   localisation: '',
   surface: '',
   chambres: '',
@@ -112,33 +113,47 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
           <label htmlFor="listing-prix" className="block text-sm font-medium mb-1">
             {ownerMode || form.type === 'location' ? 'Loyer (FCFA)' : 'Prix (FCFA)'}
           </label>
-          <div className="flex">
-            <input
-              id="listing-prix"
-              required
-              type="number"
-              min="0"
-              value={form.prix}
-              onChange={(e) => update('prix', e.target.value)}
-              className="min-w-0 flex-1 border border-gray-300 px-3 py-2"
-            />
-            {/* Periode de location : prix par jour, par semaine ou par mois */}
-            {(ownerMode || form.type === 'location') && (
+          <input
+            id="listing-prix"
+            required
+            type="number"
+            min="0"
+            value={form.prix}
+            onChange={(e) => update('prix', e.target.value)}
+            className="w-full border border-gray-300 px-3 py-2"
+          />
+          {/* Periode de location : un nombre et une unite (ex. pour 3 jours, pour 6 mois) */}
+          {(ownerMode || form.type === 'location') && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-sm text-gray-600">Pour</span>
+              <input
+                type="number"
+                min="1"
+                max={MAX_PERIODE_NOMBRE}
+                required
+                aria-label="Durée de location (nombre)"
+                value={form.periodeNombre ?? 1}
+                onChange={(e) => update('periodeNombre', e.target.value)}
+                className="w-20 border border-gray-300 px-3 py-2"
+              />
               <select
-                aria-label="Période de location"
+                aria-label="Durée de location (unité)"
                 value={form.periode || 'mois'}
                 onChange={(e) => update('periode', e.target.value)}
-                className="border border-l-0 border-gray-300 bg-white px-3 py-2 text-sm"
+                className="min-w-0 flex-1 border border-gray-300 bg-white px-3 py-2"
               >
                 {PERIODES.map((p) => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
+                  <option key={p.value} value={p.value}>
+                    {Number(form.periodeNombre) > 1 ? p.many : p.one}
+                  </option>
                 ))}
               </select>
-            )}
-          </div>
+            </div>
+          )}
           {Number(form.prix) > 0 && (
             <p className="text-xs text-gray-500 mt-1">
-              Affiché : {formatListingPrice(form.prix, ownerMode ? 'location' : form.type, form.periode)}
+              Affiché :{' '}
+              {formatListingPrice(form.prix, ownerMode ? 'location' : form.type, form.periode, form.periodeNombre)}
             </p>
           )}
         </div>

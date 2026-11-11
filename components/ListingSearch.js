@@ -21,8 +21,8 @@ const SOURCES = [
 
 const ROOMS = ['', '1', '2', '3', '4', '5'];
 
-// Libelles du filtre de periode de location
-const PERIODE_FILTER = { jour: 'À la journée', semaine: 'À la semaine', mois: 'Au mois' };
+// Libelles du filtre de periode de location ("Au mois", "À la journée"…)
+const PERIODE_FILTER = Object.fromEntries(PERIODES.map((p) => [p.value, p.filter]));
 
 function formatAmount(value) {
   return new Intl.NumberFormat('fr-FR').format(Number(value));
