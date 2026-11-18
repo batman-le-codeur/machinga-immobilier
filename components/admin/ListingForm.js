@@ -28,6 +28,41 @@ const EMPTY = {
   quartier: ''
 };
 
+const baseInput =
+  'border border-gray-300 bg-white px-3 py-2.5 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary';
+const inputClass = `w-full ${baseInput}`;
+
+// Une etape du formulaire : numero, titre, aide courte, puis les champs.
+function Step({ number, title, hint, children }) {
+  return (
+    <section className="border-t border-gray-200 pt-6 first:border-t-0 first:pt-0">
+      <div className="mb-4 flex items-start gap-3">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-primary text-sm font-semibold text-white">
+          {number}
+        </span>
+        <div>
+          <h2 className="font-semibold text-ink">{title}</h2>
+          {hint && <p className="mt-0.5 text-sm text-gray-500">{hint}</p>}
+        </div>
+      </div>
+      <div className="space-y-4">{children}</div>
+    </section>
+  );
+}
+
+function Field({ label, optional, htmlFor, help, children }) {
+  return (
+    <div>
+      <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-ink">
+        {label}
+        {optional && <span className="font-normal text-gray-400"> (facultatif)</span>}
+      </label>
+      {children}
+      {help && <p className="mt-1 text-xs text-gray-500">{help}</p>}
+    </div>
+  );
+}
+
 // withCityFields : l'admin modifie une annonce de particulier.
 // ownerMode : formulaire de l'espace proprietaire (locations uniquement,
 // ville + quartier au lieu d'une localisation libre, API /api/compte/annonces).
@@ -36,7 +71,9 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
   const apiBase = ownerMode ? '/api/compte/annonces' : '/api/listings';
   // Ville + quartier (annonces de particuliers) au lieu d'une localisation libre.
   const cityFields = ownerMode || withCityFields;
+  const isLocation = ownerMode || form.type === 'location';
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   function update(field, value) {
@@ -45,6 +82,7 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (uploading) return;
     setSaving(true);
     setError('');
 
@@ -68,79 +106,95 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
     }
   }
 
+  const photos = form.photos || [];
+  let step = 0;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 bg-offwhite border border-gray-200 p-6">
-      <div className="grid sm:grid-cols-2 gap-5">
-        {!ownerMode && (
-        <div>
-          <label className="block text-sm font-medium mb-1">Type d&apos;annonce</label>
-          <select
-            value={form.type}
-            onChange={(e) => update('type', e.target.value) || update('category', CATEGORIES[e.target.value][0])}
-            className="w-full border border-gray-300 px-3 py-2"
-          >
-            <option value="location">Location</option>
-            <option value="vente">Vente</option>
-          </select>
+    <form onSubmit={handleSubmit} className="space-y-8 border border-gray-200 bg-offwhite p-5 sm:p-6">
+      <Step number={++step} title="Votre bien" hint={ownerMode ? 'Le type de logement et un titre clair.' : undefined}>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {!ownerMode && (
+            <Field label="Type d'annonce" htmlFor="listing-type">
+              <select
+                id="listing-type"
+                value={form.type}
+                onChange={(e) => update('type', e.target.value) || update('category', CATEGORIES[e.target.value][0])}
+                className={inputClass}
+              >
+                <option value="location">Location</option>
+                <option value="vente">Vente</option>
+              </select>
+            </Field>
+          )}
+          <Field label="Catégorie" htmlFor="listing-category">
+            <select
+              id="listing-category"
+              value={form.category}
+              onChange={(e) => update('category', e.target.value)}
+              className={inputClass}
+            >
+              {CATEGORIES[form.type].map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </Field>
         </div>
-        )}
-        <div>
-          <label className="block text-sm font-medium mb-1">Catégorie</label>
-          <select
-            value={form.category}
-            onChange={(e) => update('category', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
-          >
-            {CATEGORIES[form.type].map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+        <Field label="Titre de l'annonce" htmlFor="listing-titre" help="Le type de bien et le quartier suffisent.">
+          <input
+            id="listing-titre"
+            required
+            maxLength={120}
+            value={form.titre}
+            onChange={(e) => update('titre', e.target.value)}
+            placeholder="Ex. Studio meublé climatisé à Louis"
+            className={inputClass}
+          />
+        </Field>
+      </Step>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Titre</label>
-        <input
-          required
-          value={form.titre}
-          onChange={(e) => update('titre', e.target.value)}
-          className="w-full border border-gray-300 px-3 py-2"
-        />
-      </div>
+      <Step
+        number={++step}
+        title="Photos"
+        hint="Les annonces avec photos sont beaucoup plus consultées. Ajoutez la pièce principale en premier."
+      >
+        <PhotoUploader photos={photos} onChange={(next) => update('photos', next)} onBusyChange={setUploading} />
+      </Step>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label htmlFor="listing-prix" className="block text-sm font-medium mb-1">
-            {ownerMode || form.type === 'location' ? 'Loyer (FCFA)' : 'Prix (FCFA)'}
-          </label>
+      <Step number={++step} title={isLocation ? 'Loyer' : 'Prix'}>
+        <Field label={isLocation ? 'Montant du loyer (FCFA)' : 'Prix (FCFA)'} htmlFor="listing-prix">
           <input
             id="listing-prix"
             required
             type="number"
             min="0"
+            inputMode="numeric"
             value={form.prix}
             onChange={(e) => update('prix', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
+            placeholder={isLocation ? 'Ex. 150000' : 'Ex. 25000000'}
+            className={`${inputClass} sm:max-w-xs`}
           />
-          {/* Periode de location : un nombre et une unite (ex. pour 3 jours, pour 6 mois) */}
-          {(ownerMode || form.type === 'location') && (
-            <div className="mt-2 flex items-center gap-2">
-              <span className="text-sm text-gray-600">Pour</span>
+        </Field>
+        {/* Periode de location : un nombre et une unite (ex. pour 3 jours, pour 6 mois) */}
+        {isLocation && (
+          <Field label="Ce loyer est pour" htmlFor="listing-periode-nombre">
+            <div className="flex items-center gap-2 sm:max-w-xs">
               <input
+                id="listing-periode-nombre"
                 type="number"
                 min="1"
                 max={MAX_PERIODE_NOMBRE}
                 required
+                inputMode="numeric"
                 aria-label="Durée de location (nombre)"
                 value={form.periodeNombre ?? 1}
                 onChange={(e) => update('periodeNombre', e.target.value)}
-                className="w-20 border border-gray-300 px-3 py-2"
+                className={`${baseInput} w-20 shrink-0`}
               />
               <select
                 aria-label="Durée de location (unité)"
                 value={form.periode || 'mois'}
                 onChange={(e) => update('periode', e.target.value)}
-                className="min-w-0 flex-1 border border-gray-300 bg-white px-3 py-2"
+                className={`${baseInput} min-w-0 flex-1`}
               >
                 {PERIODES.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -149,113 +203,125 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
                 ))}
               </select>
             </div>
-          )}
-          {Number(form.prix) > 0 && (
-            <p className="text-xs text-gray-500 mt-1">
-              Affiché :{' '}
-              {formatListingPrice(form.prix, ownerMode ? 'location' : form.type, form.periode, form.periodeNombre)}
-            </p>
-          )}
-        </div>
-        {!cityFields && (
-          <div>
-            <label className="block text-sm font-medium mb-1">Localisation</label>
+          </Field>
+        )}
+        {Number(form.prix) > 0 && (
+          <p className="text-sm text-gray-600">
+            Affiché sur le site :{' '}
+            <strong className="text-primary">
+              {formatListingPrice(form.prix, isLocation ? 'location' : form.type, form.periode, form.periodeNombre)}
+            </strong>
+          </p>
+        )}
+      </Step>
+
+      <Step number={++step} title="Emplacement" hint={cityFields ? 'Le quartier est le premier critère de recherche.' : undefined}>
+        {cityFields ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Ville" htmlFor="listing-ville">
+              <input
+                id="listing-ville"
+                required
+                value={form.ville}
+                onChange={(e) => update('ville', e.target.value)}
+                placeholder="Ex. Libreville"
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Quartier" htmlFor="listing-quartier">
+              <input
+                id="listing-quartier"
+                required
+                value={form.quartier}
+                onChange={(e) => update('quartier', e.target.value)}
+                placeholder="Ex. Glass, Nzeng-Ayong…"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+        ) : (
+          <Field label="Localisation" htmlFor="listing-localisation">
             <input
+              id="listing-localisation"
               required
               value={form.localisation}
               onChange={(e) => update('localisation', e.target.value)}
-              className="w-full border border-gray-300 px-3 py-2"
+              className={inputClass}
             />
-          </div>
+          </Field>
         )}
-      </div>
+      </Step>
 
-      {cityFields && (
-        <div className="grid sm:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium mb-1">Ville</label>
+      <Step number={++step} title="Détails" hint="Tous ces champs sont facultatifs mais rassurent les visiteurs.">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          <Field label="Surface (m²)" htmlFor="listing-surface">
             <input
-              required
-              value={form.ville}
-              onChange={(e) => update('ville', e.target.value)}
-              placeholder="Ex. Libreville"
-              className="w-full border border-gray-300 px-3 py-2"
+              id="listing-surface"
+              type="number"
+              min="0"
+              inputMode="numeric"
+              value={form.surface || ''}
+              onChange={(e) => update('surface', e.target.value)}
+              className={inputClass}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Quartier</label>
+          </Field>
+          <Field label="Chambres" htmlFor="listing-chambres">
             <input
-              required
-              value={form.quartier}
-              onChange={(e) => update('quartier', e.target.value)}
-              placeholder="Ex. Glass, Nzeng-Ayong…"
-              className="w-full border border-gray-300 px-3 py-2"
+              id="listing-chambres"
+              type="number"
+              min="0"
+              inputMode="numeric"
+              value={form.chambres || ''}
+              onChange={(e) => update('chambres', e.target.value)}
+              className={inputClass}
             />
-          </div>
+          </Field>
+          <Field label="Salles de bain" htmlFor="listing-sdb">
+            <input
+              id="listing-sdb"
+              type="number"
+              min="0"
+              inputMode="numeric"
+              value={form.sallesDeBain || ''}
+              onChange={(e) => update('sallesDeBain', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
         </div>
-      )}
-
-      <div className="grid sm:grid-cols-3 gap-5">
-        <div>
-          <label className="block text-sm font-medium mb-1">Surface (m²)</label>
-          <input
-            type="number"
-            min="0"
-            value={form.surface || ''}
-            onChange={(e) => update('surface', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
+        <Field label="Description" htmlFor="listing-description">
+          <textarea
+            id="listing-description"
+            rows={5}
+            value={form.description}
+            onChange={(e) => update('description', e.target.value)}
+            placeholder={
+              isLocation
+                ? 'Pièces, équipements, eau et électricité, conditions (caution, avance)…'
+                : 'Superficie, titre foncier, accès, équipements…'
+            }
+            className={inputClass}
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Chambres</label>
-          <input
-            type="number"
-            min="0"
-            value={form.chambres || ''}
-            onChange={(e) => update('chambres', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Salles de bain</label>
-          <input
-            type="number"
-            min="0"
-            value={form.sallesDeBain || ''}
-            onChange={(e) => update('sallesDeBain', e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Description</label>
-        <textarea
-          rows={4}
-          value={form.description}
-          onChange={(e) => update('description', e.target.value)}
-          className="w-full border border-gray-300 px-3 py-2"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Statut</label>
-        <select
-          value={form.statut}
-          onChange={(e) => update('statut', e.target.value)}
-          className="w-full sm:w-64 border border-gray-300 px-3 py-2"
-        >
-          <option value="disponible">Disponible</option>
-          <option value="reserve">Réservé</option>
-          <option value="loue_vendu">Loué / Vendu</option>
-        </select>
-      </div>
-
-      <PhotoUploader photos={form.photos || []} onChange={(photos) => update('photos', photos)} />
+        </Field>
+        {/* A la creation par un proprietaire, le bien est forcement disponible. */}
+        {(!ownerMode || form.id) && (
+          <Field label="Statut" htmlFor="listing-statut">
+            <select
+              id="listing-statut"
+              value={form.statut}
+              onChange={(e) => update('statut', e.target.value)}
+              className={`${inputClass} sm:w-64`}
+            >
+              <option value="disponible">Disponible</option>
+              <option value="reserve">Réservé</option>
+              <option value="loue_vendu">Loué / Vendu</option>
+            </select>
+          </Field>
+        )}
+      </Step>
 
       {ownerMode && form.titre && (
-        <div>
-          <p className="text-sm font-medium mb-2">Aperçu de votre annonce</p>
+        <div className="border-t border-gray-200 pt-6">
+          <p className="mb-2 text-sm font-medium">Aperçu de votre annonce</p>
           {/* Apercu non cliquable, tel qu'il apparaitra dans les resultats. */}
           <div className="max-w-xs pointer-events-none select-none" aria-hidden="true">
             <ListingCard
@@ -265,41 +331,55 @@ export default function ListingForm({ initial, onSaved, onCancel, ownerMode = fa
                 ownerId: 'apercu',
                 prix: Number(form.prix) || 0,
                 localisation: [form.quartier, form.ville].filter(Boolean).join(', '),
-                photos: form.photos || []
+                photos
               }}
             />
           </div>
         </div>
       )}
 
-      {ownerMode && (
-        <p className="text-sm text-gray-500">
-          Votre annonce sera vérifiée par MACHINGA IMMOBILIER avant d&apos;être visible sur le site.
-          Toute modification du contenu entraîne une nouvelle vérification.
-        </p>
-      )}
+      <div className="space-y-3 border-t border-gray-200 pt-6">
+        {ownerMode && (
+          <p className="text-sm text-gray-500">
+            Votre annonce sera vérifiée par MACHINGA IMMOBILIER avant d&apos;être visible sur le site.
+            Toute modification du contenu entraîne une nouvelle vérification.
+          </p>
+        )}
+        {ownerMode && photos.length === 0 && !uploading && (
+          <p className="border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            Vous n&apos;avez ajouté aucune photo. Vous pouvez envoyer l&apos;annonce, mais elle sera
+            beaucoup moins vue.
+          </p>
+        )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        )}
 
-      <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-primary text-white px-6 py-2.5 text-sm font-medium hover:bg-primary-light transition-colors disabled:opacity-60"
-        >
-          {saving
-            ? 'Enregistrement…'
-            : ownerMode && !form.id
-              ? 'Envoyer pour validation'
-              : "Enregistrer l'annonce"}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-6 py-2.5 text-sm font-medium border border-gray-300 hover:border-primary transition-colors"
-        >
-          Annuler
-        </button>
+        <div className="flex flex-col-reverse gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="border border-gray-300 px-6 py-3 text-sm font-medium transition-colors hover:border-primary"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            disabled={saving || uploading}
+            className="bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-light disabled:opacity-60 sm:min-w-[16rem]"
+          >
+            {uploading
+              ? 'Patientez, envoi des photos…'
+              : saving
+                ? 'Enregistrement…'
+                : ownerMode && !form.id
+                  ? 'Envoyer pour validation'
+                  : "Enregistrer l'annonce"}
+          </button>
+        </div>
       </div>
     </form>
   );
